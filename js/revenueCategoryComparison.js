@@ -1,14 +1,4 @@
-function buildRevenueComparison(
-    month = "April",
-    category = "Food"
-) {
-
-    console.log("Selected Month:", month);
-    console.log("Selected Category:", category);
-
-}
-
-function buildRevenueComparison(
+function buildRevenueCategoryComparison(
     month = "April",
     category = "Food"
 ) {
@@ -77,7 +67,7 @@ function buildRevenueComparison(
             <select
                 id="monthSelector"
                 onchange="
-                buildRevenueComparison(
+                buildRevenueCategoryComparison(
                     this.value,
                     document.getElementById('categorySelector').value
                 )">
@@ -114,7 +104,7 @@ function buildRevenueComparison(
             <select
                 id="categorySelector"
                 onchange="
-                buildRevenueComparison(
+                buildRevenueCategoryComparison(
                     document.getElementById('monthSelector').value,
                     this.value
                 )">
@@ -380,40 +370,43 @@ function getCategoryComparisonData(
     });
 
 }
-let revenueCategoryComparisonChart = null;
+let revenueCategoryChart = null;
 
 function createRevenueCategoryComparisonChart(
     rows,
     month,
     category
-) {
+){
 
     const canvas =
         document.getElementById(
             "categoryComparisonChart"
         );
 
-    if (!canvas) return;
+    if(!canvas) return;
 
-    if (revenueCategoryComparisonChart) {
+    if(revenueCategoryChart){
 
-        revenueCategoryComparisonChart.destroy();
+        revenueCategoryChart.destroy();
 
     }
 
-    revenueCategoryComparisonChart =
-        new Chart(canvas, {
+    revenueCategoryChart = new Chart(
 
-            type: "bar",
+        canvas,
 
-            data: {
+        {
+
+            type:"bar",
+
+            data:{
 
                 labels:
                     rows.map(
                         x => x.outlet
                     ),
 
-                datasets: [
+                datasets:[
 
                     {
 
@@ -423,7 +416,8 @@ function createRevenueCategoryComparisonChart(
                         data:
                             rows.map(
                                 x =>
-                                x.previous / 10000000
+                                x.previous
+                                / 10000000
                             )
 
                     },
@@ -436,7 +430,8 @@ function createRevenueCategoryComparisonChart(
                         data:
                             rows.map(
                                 x =>
-                                x.current / 10000000
+                                x.current
+                                / 10000000
                             )
 
                     }
@@ -445,56 +440,54 @@ function createRevenueCategoryComparisonChart(
 
             },
 
-            options: {
+            options:{
 
-                responsive: true,
+                responsive:true,
 
-                maintainAspectRatio: false,
+                maintainAspectRatio:false,
 
-                plugins: {
+                plugins:{
 
-                    legend: {
+                    legend:{
 
-                        labels: {
+                        labels:{
 
-                            color: "white"
+                            color:"white"
 
                         }
 
                     },
 
-                    title: {
+                    title:{
 
-                        display: true,
+                        display:true,
 
                         text:
                             `${category} Revenue Comparison`,
 
-                        color: "white"
+                        color:"white"
 
                     }
 
                 },
 
-                scales: {
+                scales:{
 
-                    x: {
+                    x:{
 
-                        ticks: {
+                        ticks:{
 
-                            color: "white"
+                            color:"white"
 
                         }
 
                     },
 
-                    y: {
+                    y:{
 
-                        beginAtZero: true,
+                        ticks:{
 
-                        ticks: {
-
-                            color: "white"
+                            color:"white"
 
                         }
 
@@ -504,6 +497,8 @@ function createRevenueCategoryComparisonChart(
 
             }
 
-        });
+        }
+
+    );
 
 }

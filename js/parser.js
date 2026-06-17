@@ -377,3 +377,64 @@ function getOutletRevenueFromSheet(sheetData) {
     return outlets;
 
 }
+function getRevenueMixByOutlet(sheetData) {
+
+    const headerRow = sheetData[2];
+
+    const foodRow =
+        findExactRow(sheetData, "Food");
+
+    const beverageRow =
+        findExactRow(sheetData, "Beverage");
+
+    const liquorRow =
+        findExactRow(sheetData, "Liquor");
+
+    const serviceRow =
+        findExactRow(sheetData, "Service Charge");
+
+    if (!headerRow) return [];
+
+    const outlets = [];
+
+    headerRow.forEach((cell, index) => {
+
+        if (
+            typeof cell === "string" &&
+            cell.trim() !== ""
+        ) {
+
+            let outlet =
+                cell.trim();
+
+            if (
+                outlet.includes("HO") ||
+                outlet.includes("Outlets Total")
+            ) {
+                return;
+            }
+
+            outlets.push({
+
+                outlet,
+
+                food:
+                    Number(foodRow?.[index]) || 0,
+
+                beverage:
+                    Number(beverageRow?.[index]) || 0,
+
+                liquor:
+                    Number(liquorRow?.[index]) || 0,
+
+                service:
+                    Number(serviceRow?.[index]) || 0
+
+            });
+
+        }
+
+    });
+
+    return outlets;
+}
