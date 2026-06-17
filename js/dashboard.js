@@ -42,8 +42,7 @@ function buildDashboard() {
             <h3>Total Revenue</h3>
             <h2>₹${(revenue / 10000000).toFixed(2)} Cr</h2>
         </div>
-
-         <div class="kpi-card">
+          <div class="kpi-card">
             <h3>COGS</h3>
             <h2>₹${(cogs / 10000000).toFixed(2)} Cr</h2>
         </div>
