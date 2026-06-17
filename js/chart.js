@@ -9,7 +9,9 @@ let revenueMixChart = null;
 function createRevenueMixChart() {
 
     const canvas =
-        document.getElementById("revenueMixChart");
+        document.getElementById(
+            "revenueMixChart"
+        );
 
     if (!canvas) return;
 
@@ -29,27 +31,37 @@ function createRevenueMixChart() {
         data: {
 
             labels: [
+
                 "Food",
                 "Beverage",
                 "Liquor",
                 "Service Charge",
                 "Scrap"
+
             ],
 
             datasets: [{
+
                 data: [
+
                     mix.food || 0,
                     mix.beverage || 0,
                     mix.liquor || 0,
                     mix.service || 0,
                     mix.scrap || 0
-                ]
+
+                ],
+
+                borderWidth: 2
+
             }]
+
         },
 
         options: {
 
             responsive: true,
+
             maintainAspectRatio: false,
 
             plugins: {
@@ -59,14 +71,68 @@ function createRevenueMixChart() {
                     position: "bottom",
 
                     labels: {
-                        color: "white"
-                    }
-                }
-            }
-        }
-    });
-}
 
+                        color: "white",
+
+                        font: {
+
+                            size: 12
+
+                        }
+
+                    }
+
+                },
+
+                datalabels: {
+
+                    color: "Black",
+
+                    anchor: "center",
+
+                    align: "center",
+
+                    font: {
+
+                        weight: "bold",
+
+                        size: 11
+
+                    },
+
+                    formatter: (value) => {
+
+                        if (!value) return "";
+
+                        if (value < 1000000) {
+
+                            return "₹" +
+                                value.toLocaleString();
+
+                        }
+
+                        return "₹" +
+                            (value / 10000000)
+                            .toFixed(2) +
+                            " Cr";
+
+                    }
+
+                }
+
+            }
+
+        },
+
+        plugins: [
+
+            ChartDataLabels
+
+        ]
+
+    });
+
+}
 /* ==========================
    QUARTER REVENUE CHART
 ========================== */
