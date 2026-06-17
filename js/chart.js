@@ -5,7 +5,6 @@ let revenueMixChart = null;
 /* ==========================
    REVENUE MIX CHART
 ========================== */
-
 function createRevenueMixChart() {
 
     const canvas =
