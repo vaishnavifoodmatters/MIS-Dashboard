@@ -57,7 +57,7 @@ function buildDashboard() {
             <h3>EBIDTA</h3>
             <h2>₹${(ebitda / 10000000).toFixed(2)} Cr</h2>
         </div>
-        
+
     </div>
 
     <!-- ROW 1 -->
