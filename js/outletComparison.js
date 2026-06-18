@@ -2,14 +2,14 @@ function buildOutletComparison(month = "April") {
 
     const sheet25 =
         window.dashboardData
-        .fy2526
+        .previousYear
         .monthlyData[
             `Summary Sheet - ${month} 2025`
         ];
 
     const sheet26 =
         window.dashboardData
-        .fy2627
+        .currentYear
         .monthlyData[
             `Summary Sheet - ${month} 2026`
         ];

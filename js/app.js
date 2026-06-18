@@ -41,13 +41,13 @@ async function loadMISFiles() {
 
         window.dashboardData = {
 
-            fy2526:
+            previousYear:
                 processWorkbook(
                     workbook2526,
                     "25-26"
                 ),
 
-            fy2627:
+            currentYear:
                 processWorkbook(
                     workbook2627,
                     "26-27"
@@ -60,7 +60,7 @@ async function loadMISFiles() {
             window.dashboardData
         );
 
-        buildDashboard("fy2627");
+        buildDashboard("currentYear");
 
     }
 

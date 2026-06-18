@@ -1,7 +1,7 @@
 function buildDashboard() {
 
     const data =
-        window.dashboardData?.fy2627;
+        window.dashboardData?.currentYear;
 
     if (!data) {
         console.log("No Dashboard Data Found");

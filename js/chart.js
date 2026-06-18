@@ -15,7 +15,7 @@ function createRevenueMixChart() {
     if (!canvas) return;
 
     const mix =
-        window.dashboardData?.fy2627?.revenueMix;
+        window.dashboardData?.currentYear?.revenueMix;
 
     if (!mix) return;
 
@@ -144,7 +144,7 @@ function createQuarterRevenueChart() {
     if (!canvas) return;
 
     const data =
-        window.dashboardData?.fy2627;
+        window.dashboardData?.currentYear;
 
     if (!data?.quarterRevenue) return;
 
@@ -240,7 +240,7 @@ function createOutletRevenueChart() {
     if (!canvas) return;
 
     const outlets =
-        window.dashboardData?.fy2627?.outletRanking;
+        window.dashboardData?.currentYear?.outletRanking;
 
     if (!outlets || !outlets.length)
         return;
@@ -339,10 +339,10 @@ function createRevenueCategoryChart() {
     }
 
     const fy2526 =
-        window.dashboardData.fy2526.revenueMix;
+        window.dashboardData.previousYear.revenueMix;
 
     const fy2627 =
-        window.dashboardData.fy2627.revenueMix;
+        window.dashboardData.currentYear.revenueMix;
 
     revenueCategoryChart =
     new Chart(canvas, {
@@ -369,11 +369,11 @@ function createRevenueCategoryChart() {
 
                     data:[
 
-                        fy2526.food,
-                        fy2526.beverage,
-                        fy2526.liquor,
-                        fy2526.service,
-                        fy2526.scrap
+                        previousYear.food,
+                        previousYear.beverage,
+                        previousYear.liquor,
+                        previousYear.service,
+                        previousYear.scrap
 
                     ]
 
@@ -385,11 +385,11 @@ function createRevenueCategoryChart() {
 
                     data:[
 
-                        fy2627.food,
-                        fy2627.beverage,
-                        fy2627.liquor,
-                        fy2627.service,
-                        fy2627.scrap
+                        currentYear.food,
+                        currentYear.beverage,
+                        currentYear.liquor,
+                        currentYear.service,
+                        currentYear.scrap
 
                     ]
 
@@ -472,10 +472,10 @@ function createRevenueComparisonChart() {
                 data: [
 
                     window.dashboardData
-                    .fy2526.revenue,
+                    .previousYear.revenue,
 
                     window.dashboardData
-                    .fy2627.revenue
+                    .currentYear.revenue
 
                 ]
 
@@ -498,12 +498,12 @@ function createQuarterComparisonChart() {
 
     const fy2526 =
         window.dashboardData
-        .fy2526
+        .previousYear
         .quarterRevenue;
 
     const fy2627 =
         window.dashboardData
-        .fy2627
+        .currentYear
         .quarterRevenue;
 
     if (quarterComparisonChart) {

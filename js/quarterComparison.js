@@ -2,10 +2,10 @@
 function buildQuarterRows() {
 
     const fy2526 =
-        window.dashboardData.fy2526.quarterRevenue;
+        window.dashboardData.previousYear.quarterRevenue;
 
     const fy2627 =
-        window.dashboardData.fy2627.quarterRevenue;
+        window.dashboardData.currentYear.quarterRevenue;
 
     const quarters = [
 
@@ -71,7 +71,7 @@ function buildQuarterRows() {
 function getBestQuarter() {
 
     const quarters =
-        window.dashboardData.fy2627.quarterRevenue;
+        window.dashboardData.currentYear.quarterRevenue;
 
     const maxValue =
         Math.max(...quarters);
@@ -88,10 +88,10 @@ function getBestQuarter() {
 function buildQuarterComparison() {
 
     const fy2526 =
-        window.dashboardData.fy2526;
+        window.dashboardData.previousYear;
 
     const fy2627 =
-        window.dashboardData.fy2627;
+        window.dashboardData.currentYear;
 
     const bestQuarter =
         getBestQuarter();
