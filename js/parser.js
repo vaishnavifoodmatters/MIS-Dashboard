@@ -407,13 +407,17 @@ function getRevenueMixByOutlet(sheetData) {
             let outlet =
                 cell.trim();
 
-            if (
-                outlet.includes("HO") ||
-                outlet.includes("Outlets Total")
-            ) {
-                return;
-            }
-
+           if (
+    
+            outlet.includes("HO") ||
+            outlet.includes("Outlets Total")
+        )
+        {
+            return;
+        }
+        if (outlet === "Table Total") {
+            outlet = "The Table";
+        }
             outlets.push({
 
                 outlet,
