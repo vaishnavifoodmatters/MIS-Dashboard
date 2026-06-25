@@ -1,3 +1,25 @@
+//HELPER
+function getAmountValue(row) {
+
+    if (!row) return 0;
+
+    let maxValue = 0;
+
+    for (let i = 0; i < row.length; i++) {
+
+        const value = Number(row[i]);
+
+        if (!isNaN(value) && value > maxValue) {
+            maxValue = value;
+        }
+
+    }
+
+    return maxValue;
+}
+
+// 
+
 function findRow(sheetData, keyword) {
 
     if (!sheetData) {
@@ -21,14 +43,11 @@ function findRow(sheetData, keyword) {
 
 function getRevenue(sheetData) {
 
-    if (!sheetData) return 0;
+    const row = findRow(sheetData, "Total Sales Revenue");
 
-    const row =
-        findRow(sheetData, "Total Sales Revenue");
+    console.table(row);
 
-    return row
-        ? Number(row[2]) || 0
-        : 0;
+    return getAmountValue(row);
 
 }
 
@@ -38,14 +57,11 @@ function getRevenue(sheetData) {
 
 function getGrossMargin(sheetData) {
 
-    if (!sheetData) return 0;
+    const row = findRow(sheetData, "Gross Margin");
 
-    const row =
-        findRow(sheetData, "Gross Margin");
+    console.table(row);
 
-    return row
-        ? Number(row[2]) || 0
-        : 0;
+    return getAmountValue(row);
 
 }
 
@@ -55,24 +71,34 @@ function getGrossMargin(sheetData) {
 
 function getEBITDA(sheetData) {
 
-    if (!sheetData) return 0;
+    const row = sheetData.find(r =>
+        r.some(cell => {
 
-    const row = sheetData.find(row =>
-        row.some(cell => {
+            const txt = String(cell || "").toUpperCase();
 
-            const text =
-                String(cell || "")
-                    .toUpperCase();
-
-            return text.includes("EBIDTA") ||
-                   text.includes("EBITDA");
+            return txt.includes("EBITDA") ||
+                   txt.includes("EBIDTA");
 
         })
     );
 
-    return row
-        ? Number(row[2]) || 0
-        : 0;
+    console.table(row);
+
+    return getAmountValue(row);
+
+}
+
+// =========================
+// COGS
+// =========================
+
+function getCOGS(sheetData) {
+
+    const row = findRow(sheetData, "Total COGS & Packaging");
+
+    console.table(row);
+
+    return getAmountValue(row);
 
 }
 
@@ -99,20 +125,6 @@ function getQuarterRevenue(sheetData) {
     }
 
     return 0;
-}
-
-// =========================
-// OUTLET REVENUE
-// =========================
-
-function getCOGS(sheetData) {
-
-    const row =
-        findRow(sheetData, "Total COGS & Packaging");
-
-    console.log("COGS Row:", row);
-
-    return row ? Number(row[2]) : 0;
 }
 
 function getRevenueMix(sheetData) {
@@ -200,7 +212,6 @@ function getDynamicOutletRevenue(sheetData) {
 
             // EXCLUDE TOTALS & HO
             if (
-                outlet.includes("HO") ||
                 outlet.includes("Total with HO") ||
                 outlet.includes("Outlets Total")
             ) {
@@ -273,7 +284,6 @@ function getOutletPerformance(sheetData) {
 
             // EXCLUDE TOTALS & HO
             if (
-                outlet.includes("HO") ||
                 outlet.includes("Total with HO") ||
                 outlet.includes("Outlets Total")
             ) {
@@ -352,13 +362,11 @@ function getOutletRevenueFromSheet(sheetData) {
             }
 
             if(
-                outlet.includes("HO") ||
                 outlet.includes("Total with HO") ||
                 outlet.includes("Outlets Total")
             ){
                 return;
             }
-
             outlets.push({
 
                 outlet,
@@ -408,8 +416,7 @@ function getRevenueMixByOutlet(sheetData) {
                 cell.trim();
 
            if (
-    
-            outlet.includes("HO") ||
+            outlet.includes("Total with HO") ||
             outlet.includes("Outlets Total")
         )
         {

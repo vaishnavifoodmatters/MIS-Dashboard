@@ -58,6 +58,10 @@ function processWorkbook(workbook, yearKey) {
         q4Data ? getQuarterRevenue(q4Data) : 0
 
     ];
+    console.log("Revenue:", revenue);
+    console.log("Gross Margin:", grossMargin);
+    console.log("EBITDA:", ebitda);
+    console.log("COGS:", cogs);
 
     return {
 
@@ -71,7 +75,10 @@ function processWorkbook(workbook, yearKey) {
         outletRanking,
         outletPerformance,
 
-        quarterRevenue
+        quarterRevenue,
+
+         // IMPORTANT
+        monthlyData: workbookData
 
     };
 

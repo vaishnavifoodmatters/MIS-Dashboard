@@ -1,147 +1,93 @@
-window.addEventListener(
-    "DOMContentLoaded",
-    loadMISFiles
-);
+window.addEventListener("DOMContentLoaded", loadMISFiles);
 
 async function loadMISFiles() {
 
     try {
 
-        const fy2526Response =
-            await fetch(
-                "data/FY2025-2026 _ Budgeted and Actual MIS - (2).xlsx"
-            );
+        console.log("Loading MIS files...");
 
-        const fy2627Response =
-            await fetch(
-                "data/FY2026-2027_Budgeted and Actual MIS.xlsx"
-            );
+        // =========================
+        // LOAD FY25-26
+        // =========================
+
+        const fy2526Response = await fetch(
+            "data/FY2025-2026 _ Budgeted and Actual MIS - (2).xlsx"
+        );
+
+        if (!fy2526Response.ok) {
+            throw new Error("Unable to load FY25-26 workbook.");
+        }
 
         const fy2526Buffer =
             await fy2526Response.arrayBuffer();
 
-        const fy2627Buffer =
-            await fy2627Response.arrayBuffer();
-
         const workbook2526 =
-            XLSX.read(
-                fy2526Buffer,
-                { type: "array" }
-            );
+            XLSX.read(fy2526Buffer, {
+                type: "array"
+            });
+
         console.log("FY25-26 Loaded");
         console.log(workbook2526.SheetNames);
 
+        // =========================
+        // LOAD FY26-27
+        // =========================
+
+        const fy2627Response = await fetch(
+            "data/Actual MIS - May,2026  (15-06-2026).xlsx"
+        );
+
+        if (!fy2627Response.ok) {
+            throw new Error("Unable to load FY26-27 workbook.");
+        }
+
+        const fy2627Buffer =
+            await fy2627Response.arrayBuffer();
+
         const workbook2627 =
-            XLSX.read(
-                fy2627Buffer,
-                { type: "array" }
-            );
+            XLSX.read(fy2627Buffer, {
+                type: "array"
+            });
+
         console.log("FY26-27 Loaded");
         console.log(workbook2627.SheetNames);
 
+        // =========================
+        // PROCESS BOTH WORKBOOKS
+        // =========================
+
+        const previousYear =
+            processWorkbook(workbook2526, "25-26");
+
+        const currentYear =
+            processWorkbook(workbook2627, "26-27");
+
         window.dashboardData = {
-
-            previousYear:
-                processWorkbook(
-                    workbook2526,
-                    "25-26"
-                ),
-
-            currentYear:
-                processWorkbook(
-                    workbook2627,
-                    "26-27"
-                )
-
+            previousYear,
+            currentYear
         };
 
-        console.log(
-            "Dashboard Data",
-            window.dashboardData
-        );
+        console.log("Dashboard Data:");
+        console.log(window.dashboardData);
 
-        buildDashboard("currentYear");
+        console.log("Previous Year Sheets:");
+        console.log(Object.keys(window.dashboardData.previousYear.monthlyData));
+
+        console.log("Current Year Sheets:");
+        console.log(Object.keys(window.dashboardData.currentYear.monthlyData));
+
+        // =========================
+        // BUILD DASHBOARD
+        // =========================
+
+        buildDashboard();
 
     }
 
-    catch(error){
+    catch (error) {
 
-        console.error(error);
+        console.error("App Error:", error);
 
     }
-
-}
-function processWorkbook(workbook, year) {
-
-    const workbookData = {};
-
-    workbook.SheetNames.forEach(sheetName => {
-
-        workbookData[sheetName] =
-
-            XLSX.utils.sheet_to_json(
-
-                workbook.Sheets[sheetName],
-
-                { header: 1 }
-
-            );
-
-    });
-
-    const fySheet =
-
-        workbookData[
-            workbook.SheetNames.find(
-                name => name.includes("FY")
-            )
-        ];
-
-    const quarterSheets =
-
-        workbook.SheetNames.filter(
-            name => name.includes("Q")
-        );
-
-    const quarterRevenue =
-
-        quarterSheets.map(sheet =>
-
-            getQuarterRevenue(
-                workbookData[sheet]
-            )
-
-        );
-
-    return {
-
-        revenue:
-            getRevenue(fySheet),
-
-        grossMargin:
-            getGrossMargin(fySheet),
-
-        ebitda:
-            getEBITDA(fySheet),
-
-        cogs:
-            getCOGS(fySheet),
-
-        revenueMix:
-            getRevenueMix(fySheet),
-
-        outletRanking:
-            getDynamicOutletRevenue(fySheet),
-
-        outletPerformance:
-            getOutletPerformance(fySheet),
-
-        quarterRevenue:
-            quarterRevenue,
-        
-        monthlyData:
-            workbookData
-
-    };
 
 }
