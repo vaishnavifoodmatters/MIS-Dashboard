@@ -151,7 +151,8 @@ body{
 ========================== */
 
 .table-card{
-    overflow:hidden;
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 
 .outlet-table{

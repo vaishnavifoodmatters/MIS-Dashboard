@@ -1,25 +1,29 @@
 //HELPER
-function getAmountValue(row) {
+function getTotalWithHOAmount(sheetData, keyword) {
+
+    const row = findRow(sheetData, keyword);
 
     if (!row) return 0;
 
-    let maxValue = 0;
+    // Find the "Total with HO" Amount column dynamically
+    const headerRow = sheetData[3];
 
-    for (let i = 0; i < row.length; i++) {
+    let amountIndex = -1;
 
-        const value = Number(row[i]);
-
-        if (!isNaN(value) && value > maxValue) {
-            maxValue = value;
+    for (let i = 0; i < headerRow.length; i++) {
+        if (
+            String(headerRow[i]).trim().toLowerCase() === "amount"
+        ) {
+            amountIndex = i;
+            break; // first "Amount" = Total with HO
         }
-
     }
 
-    return maxValue;
+    if (amountIndex === -1) return 0;
+
+    return Number(row[amountIndex]) || 0;
 }
-
 // 
-
 function findRow(sheetData, keyword) {
 
     if (!sheetData) {
@@ -42,13 +46,7 @@ function findRow(sheetData, keyword) {
 // =========================
 
 function getRevenue(sheetData) {
-
-    const row = findRow(sheetData, "Total Sales Revenue");
-
-    console.table(row);
-
-    return getAmountValue(row);
-
+    return getTotalWithHOAmount(sheetData, "Total Sales Revenue");
 }
 
 // =========================
@@ -56,13 +54,7 @@ function getRevenue(sheetData) {
 // =========================
 
 function getGrossMargin(sheetData) {
-
-    const row = findRow(sheetData, "Gross Margin");
-
-    console.table(row);
-
-    return getAmountValue(row);
-
+    return getTotalWithHOAmount(sheetData, "Gross Margin");
 }
 
 // =========================
@@ -71,35 +63,33 @@ function getGrossMargin(sheetData) {
 
 function getEBITDA(sheetData) {
 
-    const row = sheetData.find(r =>
-        r.some(cell => {
+    const row = sheetData.find(row =>
+        row.some(cell => {
 
-            const txt = String(cell || "").toUpperCase();
+            const text = String(cell || "").toUpperCase();
 
-            return txt.includes("EBITDA") ||
-                   txt.includes("EBIDTA");
+            return text.includes("EBIDTA") ||
+                   text.includes("EBITDA");
 
         })
     );
 
-    console.table(row);
+    if (!row) {
+        console.log("EBITDA Row Not Found");
+        return 0;
+    }
 
-    return getAmountValue(row);
+    console.log("EBITDA Row:", row);
+
+    return Number(row[1]) || 0;
 
 }
-
 // =========================
 // COGS
 // =========================
 
 function getCOGS(sheetData) {
-
-    const row = findRow(sheetData, "Total COGS & Packaging");
-
-    console.table(row);
-
-    return getAmountValue(row);
-
+    return getTotalWithHOAmount(sheetData, "Total COGS & Packaging");
 }
 
 // =========================
@@ -239,6 +229,8 @@ function getDynamicOutletRevenue(sheetData) {
     );
 
 }
+//
+
 function getOutletPerformance(sheetData) {
 
     const headerRow = sheetData[2];
@@ -275,18 +267,14 @@ function getOutletPerformance(sheetData) {
             cell.trim() !== ""
         ) {
 
-            let outlet =
-                cell.trim();
+            let outlet = cell.trim();
 
             if (outlet === "Table Total") {
                 outlet = "The Table";
             }
 
-            // EXCLUDE TOTALS & HO
-            if (
-                outlet.includes("Total with HO") ||
-                outlet.includes("Outlets Total")
-            ) {
+            // Exclude only Total with HO
+            if (outlet.includes("Total with HO")) {
                 return;
             }
 
@@ -299,38 +287,45 @@ function getOutletPerformance(sheetData) {
             const ebitda =
                 Number(ebitdaRow?.[index]) || 0;
 
-            if (revenue > 0) {
+            outlets.push({
 
-                outlets.push({
+                outlet,
 
-                    outlet,
-                    revenue,
+                revenue,
 
-                    gmPercent:
-                        revenue > 0
+                gmPercent:
+                    revenue > 0
                         ? (grossMargin / revenue) * 100
                         : 0,
 
-                    ebitda,
+                ebitda,
 
-                    ebitdaPercent:
-                        revenue > 0
+                ebitdaPercent:
+                    revenue > 0
                         ? (ebitda / revenue) * 100
                         : 0
 
-                });
-
-            }
+            });
 
         }
 
     });
 
-    return outlets.sort(
-        (a, b) => b.revenue - a.revenue
+    // Keep Outlets Total at the top
+    const outletsTotal = outlets.find(
+        x => x.outlet === "Outlets Total"
     );
 
+    const others = outlets
+        .filter(x => x.outlet !== "Outlets Total")
+        .sort((a, b) => b.revenue - a.revenue);
+
+    return outletsTotal
+        ? [outletsTotal, ...others]
+        : others;
+
 }
+
 function getOutletRevenueFromSheet(sheetData) {
 
     const headerRow = sheetData[2];
